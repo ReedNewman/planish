@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+/* ===== CSS Custom Properties (injected from config) ===== */
+:root {
+  /* Text */
+  --planish-body-color: {{BODY_COLOR}};
+  --planish-heading-color: {{HEADING_COLOR}};
+  --planish-subtle-color: {{SUBTLE_COLOR}};
+  --planish-muted-color: {{MUTED_COLOR}};
+
+  /* Headings */
+  --planish-h2-border: {{H2_BORDER}};
+  --planish-h3-color: {{H3_COLOR}};
+  --planish-h4-color: {{H4_COLOR}};
+
+  /* Links */
+  --planish-link-color: {{LINK_COLOR}};
+
+  /* Tables */
+  --planish-table-header: {{TABLE_HEADER}};
+  --planish-table-header-text: {{TABLE_HEADER_TEXT}};
+  --planish-table-border: {{TABLE_BORDER}};
+  --planish-table-stripe: {{TABLE_STRIPE}};
+
+  /* Code */
+  --planish-code-bg: {{CODE_BACKGROUND}};
+  --planish-code-text: {{CODE_TEXT}};
+  --planish-inline-code-bg: {{INLINE_CODE_BG}};
+  --planish-inline-code-text: {{INLINE_CODE_TEXT}};
+
+  /* Callout */
+  --planish-callout-border: {{CALLOUT_BORDER}};
+  --planish-callout-bg: {{CALLOUT_BG}};
+  --planish-callout-accent: {{CALLOUT_ACCENT}};
+
+  /* Fonts */
+  --planish-body-font: {{BODY_FONT}};
+  --planish-code-font: {{CODE_FONT}};
+
+  /* Title page */
+  --planish-title-gradient: {{TITLE_GRADIENT}};
+  --planish-title-divider: {{TITLE_DIVIDER}};
+
+  /* Flowchart */
+  --planish-flowchart-bg: {{FLOWCHART_BG}};
+  --planish-flowchart-border: {{FLOWCHART_BORDER}};
+  --planish-flowchart-success-bg: {{FLOWCHART_SUCCESS_BG}};
+  --planish-flowchart-success-border: {{FLOWCHART_SUCCESS_BORDER}};
+  --planish-flowchart-warning-bg: {{FLOWCHART_WARNING_BG}};
+  --planish-flowchart-warning-border: {{FLOWCHART_WARNING_BORDER}};
+  --planish-flowchart-error-bg: {{FLOWCHART_ERROR_BG}};
+  --planish-flowchart-error-border: {{FLOWCHART_ERROR_BORDER}};
+}
+
+/* ===== Fonts ===== */
+{{FONT_IMPORT}}
+
+/* ===== Base ===== */
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--planish-body-font);
+  font-size: 10pt;
+  line-height: 1.5;
+  color: var(--planish-body-color);
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== Title Page ===== */
+.title-page {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  background: #ffffff;
+  page-break-after: always;
+}
+
+/* Right-side gradient bar on title page */
+.title-page::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 100vh;
+  background: var(--planish-title-gradient);
+  z-index: 100;
+}
+
+.title-logo {
+  position: absolute;
+  top: 40px;
+  left: 50px;
+}
+
+.title-logo img {
+  height: 42px;
+}
+
+.title-graphic {
+  margin-bottom: 16px;
+}
+
+.title-graphic img {
+  width: 180px;
+  height: 180px;
+}
+
+.title-product-logo img {
+  width: 200px;
+  margin-bottom: 30px;
+}
+
+.title-divider {
+  width: 420px;
+  height: 2px;
+  background: var(--planish-title-divider);
+  margin: 14px auto;
+}
+
+.title-page h1 {
+  font-size: 22pt;
+  font-weight: 600;
+  color: var(--planish-heading-color);
+  margin: 6px 0;
+  letter-spacing: 0.3px;
+  page-break-before: avoid;
+  border: none;
+}
+
+.title-page .subtitle {
+  font-size: 11pt;
+  color: var(--planish-subtle-color);
+  margin: 4px 0 24px 0;
+}
+
+.title-developed {
+  font-size: 9pt;
+  color: var(--planish-subtle-color);
+  margin-top: 40px;
+}
+
+.title-copyright {
+  position: absolute;
+  bottom: 30px;
+  font-size: 7.5pt;
+  color: var(--planish-muted-color);
+}
+
+/* ===== Content ===== */
+.content-body {
+  position: relative;
+}
+
+/* ===== Content Headings ===== */
+h1 {
+  font-size: 20pt;
+  color: var(--planish-heading-color);
+  font-weight: 700;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 16pt;
+  color: var(--planish-heading-color);
+  font-weight: 600;
+  border-bottom: 2.5px solid var(--planish-h2-border);
+  padding-bottom: 4px;
+  margin-top: 28px;
+  margin-bottom: 14px;
+  page-break-before: always;
+}
+
+/* First h2 in content should not force page break */
+.content-body > h2:first-child {
+  page-break-before: avoid;
+}
+
+h3 {
+  font-size: 13pt;
+  color: var(--planish-h3-color);
+  font-weight: 600;
+  margin-top: 22px;
+  margin-bottom: 10px;
+}
+
+h4 {
+  font-size: 11pt;
+  color: var(--planish-h4-color);
+  font-weight: 600;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+h5 {
+  font-size: 10pt;
+  color: var(--planish-heading-color);
+  font-weight: 600;
+  margin-top: 14px;
+  margin-bottom: 6px;
+}
+
+/* ===== Paragraph & Text ===== */
+p {
+  margin: 8px 0;
+  orphans: 3;
+  widows: 3;
+}
+
+strong {
+  color: var(--planish-heading-color);
+}
+
+a {
+  color: var(--planish-link-color);
+  text-decoration: none;
+}
+
+/* ===== Horizontal Rules ===== */
+hr {
+  border: none;
+  border-top: 1.5px solid var(--planish-table-border);
+  margin: 20px 0;
+}
+
+/* ===== Tables ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 9pt;
+  page-break-inside: auto;
+}
+
+thead {
+  display: table-header-group;
+}
+
+tr {
+  page-break-inside: avoid;
+  page-break-after: auto;
+}
+
+th {
+  background-color: var(--planish-table-header);
+  color: var(--planish-table-header-text);
+  font-weight: 600;
+  text-align: left;
+  padding: 7px 8px;
+  font-size: 8.5pt;
+  white-space: nowrap;
+}
+
+td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--planish-table-border);
+  vertical-align: top;
+}
+
+/* Striped rows */
+tbody tr:nth-child(even) {
+  background-color: var(--planish-table-stripe);
+}
+
+/* ===== Wide Tables ===== */
+table.wide-table {
+  font-size: 7pt;
+}
+
+table.wide-table th {
+  padding: 4px 3px;
+  font-size: 6.5pt;
+  white-space: normal;
+  word-break: break-word;
+}
+
+table.wide-table td {
+  padding: 3px 3px;
+  text-align: center;
+  font-size: 7pt;
+}
+
+table.wide-table td:first-child {
+  text-align: left;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* ===== Code Blocks ===== */
+pre {
+  background-color: var(--planish-code-bg);
+  border-radius: 4px;
+  padding: 12px 14px;
+  overflow-x: auto;
+  margin: 10px 0;
+  font-size: 8.5pt;
+  line-height: 1.45;
+  page-break-inside: avoid;
+}
+
+pre code {
+  font-family: var(--planish-code-font);
+  color: var(--planish-code-text);
+  background: none;
+  padding: 0;
+  font-size: 8.5pt;
+}
+
+/* Inline code */
+code {
+  font-family: var(--planish-code-font);
+  background-color: var(--planish-inline-code-bg);
+  color: var(--planish-inline-code-text);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 8.5pt;
+}
+
+/* ===== Syntax Highlighting (Dark Theme) ===== */
+.hljs-keyword,
+.hljs-selector-tag { color: #ff7b72; }
+.hljs-string,
+.hljs-attr { color: #a5d6ff; }
+.hljs-number,
+.hljs-literal { color: #79c0ff; }
+.hljs-built_in { color: #ffa657; }
+.hljs-comment { color: #8b949e; font-style: italic; }
+.hljs-punctuation { color: #c9d1d9; }
+.hljs-property { color: #7ee787; }
+.hljs-name { color: #7ee787; }
+
+/* ===== Blockquotes (Callouts) ===== */
+blockquote {
+  border-left: 4px solid var(--planish-callout-border);
+  background-color: var(--planish-callout-bg);
+  margin: 14px 0;
+  padding: 10px 16px;
+  border-radius: 0 4px 4px 0;
+  font-size: 9.5pt;
+  color: var(--planish-heading-color);
+  page-break-inside: avoid;
+}
+
+blockquote p {
+  margin: 4px 0;
+}
+
+blockquote strong {
+  color: var(--planish-callout-accent);
+}
+
+/* ===== Lists ===== */
+ul, ol {
+  padding-left: 22px;
+  margin: 6px 0;
+}
+
+li {
+  margin: 3px 0;
+}
+
+li > ul, li > ol {
+  margin: 2px 0;
+}
+
+/* ===== Diagram Images ===== */
+.diagram-container {
+  text-align: center;
+  margin: 16px 0;
+  page-break-inside: avoid;
+}
+
+.diagram-container img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===== Utility Classes ===== */
+.page-break {
+  page-break-before: always;
+}
+
+.no-break {
+  page-break-inside: avoid;
+}
+
+/* ===== Flowchart ===== */
+.flowchart-box {
+  background: var(--planish-flowchart-bg);
+  border: 1.5px solid var(--planish-flowchart-border);
+  border-radius: 6px;
+  padding: 20px;
+  margin: 16px 0;
+  page-break-inside: avoid;
+}
+
+.flowchart-box .flow-step {
+  background: #ffffff;
+  border: 1.5px solid var(--planish-flowchart-border);
+  border-radius: 4px;
+  padding: 8px 14px;
+  margin: 4px auto;
+  max-width: 400px;
+  text-align: center;
+  font-size: 9pt;
+  font-weight: 500;
+  color: var(--planish-heading-color);
+}
+
+.flowchart-box .flow-step.start {
+  background: var(--planish-heading-color);
+  color: #ffffff;
+  border-color: var(--planish-heading-color);
+}
+
+.flowchart-box .flow-step.success {
+  background: var(--planish-flowchart-success-bg);
+  border-color: var(--planish-flowchart-success-border);
+}
+
+.flowchart-box .flow-step.warning {
+  background: var(--planish-flowchart-warning-bg);
+  border-color: var(--planish-flowchart-warning-border);
+}
+
+.flowchart-box .flow-step.error {
+  background: var(--planish-flowchart-error-bg);
+  border-color: var(--planish-flowchart-error-border);
+}
+
+.flowchart-box .flow-arrow {
+  text-align: center;
+  color: var(--planish-subtle-color);
+  font-size: 9pt;
+  margin: 2px 0;
+}
+
+.flowchart-box .flow-branch {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 4px 0;
+}
+
+.flowchart-box .flow-branch-label {
+  font-size: 8pt;
+  color: var(--planish-subtle-color);
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+{{BODY_CONTENT}}
+</body>
+</html>
