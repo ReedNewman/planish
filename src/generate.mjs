@@ -238,6 +238,7 @@ function buildTitleHtml(styledTemplate, doc, config, assets) {
   <div class="title-divider"></div>
   <h1>${doc.title}</h1>
   <div class="subtitle">${doc.subtitle || ''}</div>
+  ${doc.date ? `<div class="title-date">${doc.date}</div>` : ''}
   <div class="title-divider"></div>
   ${taglineSection}
   <div class="title-copyright">${footerText}</div>
