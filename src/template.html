@@ -38,6 +38,8 @@
 
   /* Fonts */
   --planish-body-font: {{BODY_FONT}};
+  --planish-heading-font: {{HEADING_FONT}};
+  --planish-heading-style: {{HEADING_STYLE}};
   --planish-code-font: {{CODE_FONT}};
 
   /* Title page */
@@ -128,6 +130,8 @@ body {
 }
 
 .title-page h1 {
+  font-family: var(--planish-heading-font);
+  font-style: var(--planish-heading-style);
   font-size: 22pt;
   font-weight: 600;
   color: var(--planish-heading-color);
@@ -168,6 +172,8 @@ body {
 
 /* ===== Content Headings ===== */
 h1 {
+  font-family: var(--planish-heading-font);
+  font-style: var(--planish-heading-style);
   font-size: 20pt;
   color: var(--planish-heading-color);
   font-weight: 700;
@@ -175,6 +181,8 @@ h1 {
 }
 
 h2 {
+  font-family: var(--planish-heading-font);
+  font-style: var(--planish-heading-style);
   font-size: 16pt;
   color: var(--planish-heading-color);
   font-weight: 600;
@@ -191,6 +199,8 @@ h2 {
 }
 
 h3 {
+  font-family: var(--planish-heading-font);
+  font-style: var(--planish-heading-style);
   font-size: 13pt;
   color: var(--planish-h3-color);
   font-weight: 600;
@@ -212,6 +222,33 @@ h5 {
   font-weight: 600;
   margin-top: 14px;
   margin-bottom: 6px;
+}
+
+/* ===== Legal layout (opt in per document with `legal: true`) ===== */
+/* A manual wants each h2 chapter on a fresh page; a legal agreement should
+   flow continuously with articles kept attached to their first clause. */
+.title-page.legal h1 {
+  font-size: 30pt;
+}
+
+.content-body.legal h2 {
+  page-break-before: auto;
+  page-break-after: avoid;
+}
+
+.content-body.legal p {
+  text-align: justify;
+}
+
+/* Markdown `---` separators between articles read as clutter next to the h2
+   border, and a trailing one before the signature strands a near-blank page. */
+.content-body.legal hr {
+  display: none;
+}
+
+/* Execution block gets its own final page */
+.content-body.legal #signature {
+  page-break-before: always;
 }
 
 /* ===== Paragraph & Text ===== */

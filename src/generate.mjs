@@ -73,6 +73,9 @@ function buildFontImport(config) {
   if (config.fonts?.body?.googleImport) {
     imports.push(config.fonts.body.googleImport);
   }
+  if (config.fonts?.heading?.googleImport) {
+    imports.push(config.fonts.heading.googleImport);
+  }
   if (config.fonts?.code?.googleImport) {
     imports.push(config.fonts.code.googleImport);
   }
@@ -104,6 +107,8 @@ function injectCssVars(templateHtml, config) {
     '{{CALLOUT_BG}}': c.calloutBackground || '#f0faf9',
     '{{CALLOUT_ACCENT}}': c.calloutAccent || '#4cbfb5',
     '{{BODY_FONT}}': config.fonts?.body?.family || "'Ubuntu', 'Source Sans 3', sans-serif",
+    '{{HEADING_FONT}}': config.fonts?.heading?.family || config.fonts?.body?.family || "'Ubuntu', 'Source Sans 3', sans-serif",
+    '{{HEADING_STYLE}}': config.fonts?.heading?.style || 'normal',
     '{{CODE_FONT}}': config.fonts?.code?.family || "'IBM Plex Mono', 'Roboto Mono', Menlo, Consolas, monospace",
     '{{TITLE_GRADIENT}}': buildGradient(c.titleGradient || ['#6dc04b', '#4cbfb5', '#0fb6e6', '#008dd3']),
     '{{TITLE_DIVIDER}}': buildGradient(c.titleDividerGradient || ['#6dc04b', '#4cbfb5', '#0fb6e6'], 'to right'),
@@ -231,7 +236,7 @@ function buildTitleHtml(styledTemplate, doc, config, assets) {
 <html lang="en">
 <head><meta charset="UTF-8"><style>${style}</style></head>
 <body>
-<div class="title-page" style="page-break-after: avoid;">
+<div class="title-page${doc.legal ? ' legal' : ''}" style="page-break-after: avoid;">
   ${logoSection}
   ${graphicSection}
   ${productLogoSection}
@@ -247,7 +252,7 @@ function buildTitleHtml(styledTemplate, doc, config, assets) {
 }
 
 // ===== Build content HTML =====
-function buildContentHtml(styledTemplate, contentHtml) {
+function buildContentHtml(styledTemplate, contentHtml, doc) {
   const styleMatch = styledTemplate.match(/<style>([\s\S]*?)<\/style>/);
   const style = styleMatch ? styleMatch[1] : '';
 
@@ -258,16 +263,21 @@ function buildContentHtml(styledTemplate, contentHtml) {
 .content-body > h2:first-child { page-break-before: avoid; }
 </style></head>
 <body>
-<div class="content-body">
+<div class="content-body${doc.legal ? ' legal' : ''}">
 ${contentHtml}
 </div>
 </body></html>`;
 }
 
 // ===== Strip the first H1 and metadata line from content =====
-function stripTitleFromMarkdown(markdown) {
+function stripTitleFromMarkdown(markdown, doc = {}) {
   markdown = markdown.replace(/^#\s+.+\n+/, '');
   markdown = markdown.replace(/^\*\*[^*]+\*\*\s*\|[\s\S]*?\n+/, '');
+  if (doc.legal) {
+    // Legal docs commonly follow the H1 with a plain bold subtitle line
+    // (no `|` metadata) — the title page subtitle already covers it.
+    markdown = markdown.replace(/^\*\*[^*\n]+\*\*\s*\n+/, '');
+  }
   markdown = markdown.replace(/^---\n+/, '');
   return markdown;
 }
@@ -304,7 +314,7 @@ async function generateDocument(browser, doc, config, configDir, assets, styledT
   let markdown = fs.readFileSync(inputPath, 'utf-8');
   console.log(`  Read ${markdown.length} bytes of markdown`);
 
-  markdown = stripTitleFromMarkdown(markdown);
+  markdown = stripTitleFromMarkdown(markdown, doc);
 
   const marked = createMarkedInstance();
   const contentHtml = await marked.parse(markdown);
@@ -335,7 +345,7 @@ async function generateDocument(browser, doc, config, configDir, assets, styledT
 
   // ---- Pass 2: Content pages ----
   console.log('  Pass 2: Generating content pages...');
-  const contentOnlyHtml = buildContentHtml(styledTemplate, contentHtml);
+  const contentOnlyHtml = buildContentHtml(styledTemplate, contentHtml, doc);
   const contentPage = await browser.newPage();
   await contentPage.setContent(contentOnlyHtml, { waitUntil: 'networkidle0' });
 

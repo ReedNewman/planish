@@ -38,6 +38,13 @@ export default {
       family: "'Ubuntu', 'Source Sans 3', sans-serif",
       googleImport: "Ubuntu:wght@400;500;700&family=Source+Sans+3:wght@400;600;700",
     },
+    // Optional display font for headings (title page h1 and content h1–h3).
+    // Omit entirely to keep headings in the body font (default behavior).
+    // heading: {
+    //   family: "'Cormorant Garamond', Georgia, serif",
+    //   googleImport: "Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700",
+    //   style: "italic",                     // "normal" (default) or "italic"
+    // },
     code: {
       family: "'IBM Plex Mono', 'Roboto Mono', Menlo, Consolas, monospace",
       googleImport: "IBM+Plex+Mono:wght@400;700&family=Roboto+Mono:wght@400;700",
@@ -118,6 +125,14 @@ export default {
       subtitle: "Version 1.0 | Integration Reference",  // Title page subheading
       confidential: true,                      // Adds "CONFIDENTIAL" to footer
       internal: false,                         // Adds "Not for Customer Distribution" to footer
+      legal: false,                            // Legal-document layout: continuous h2 flow
+                                               // (no page break per section), justified
+                                               // paragraphs, markdown --- rules hidden, and
+                                               // a "## Signature" heading starts its own
+                                               // final page. Also strips a plain bold
+                                               // subtitle line after the H1. Default false
+                                               // keeps the manual-style chapter-per-page
+                                               // layout. (Puppeteer pipeline only.)
     },
     {
       name: "Operations Guide",

@@ -74,6 +74,11 @@ export default {
       family: "'Ubuntu', 'Source Sans 3', sans-serif",
       googleImport: "Ubuntu:wght@400;500;700&family=Source+Sans+3:wght@400;600;700",
     },
+    heading: {                                 // optional display font for headings
+      family: "'Cormorant Garamond', Georgia, serif",
+      googleImport: "Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700",
+      style: "italic",                         // "normal" (default) or "italic"
+    },
     code: {
       family: "'IBM Plex Mono', 'Roboto Mono', Menlo, Consolas, monospace",
       googleImport: "IBM+Plex+Mono:wght@400;700&family=Roboto+Mono:wght@400;700",
@@ -108,6 +113,7 @@ export default {
       subtitle: "Version 1.0 | Integration Reference",
       confidential: true,                    // appends "| CONFIDENTIAL" to footer
       internal: false,                       // appends "— Not for Customer Distribution"
+      legal: false,                          // legal-document layout, see below
     },
   ],
 };
@@ -122,6 +128,21 @@ See `planish.config.sample.mjs` for the full annotated reference — every suppo
 ### Fonts
 
 Any font referenced via `googleImport` is fetched over HTTPS at render time (the Puppeteer pipeline waits for `networkidle0` before printing). Set `googleImport` to `null` if you want to rely solely on locally installed fonts. Planish ships with the Ubuntu and IBM Plex Mono TTFs under `fonts/` for the LaTeX pipeline.
+
+`fonts.heading` is optional: when present, the title-page h1 and content h1–h3 use it (with `style: "italic"` if set) while h4+ stay in the body font. When omitted, all headings use the body font — the original behavior. Puppeteer pipeline only.
+
+### Legal-document layout (`legal: true`)
+
+The default layout is tuned for technical manuals: every `##` section starts a new page. Setting `legal: true` on a document switches to a layout tuned for contracts and agreements:
+
+- `##` headings flow continuously (no forced page break) and stay attached to the paragraph that follows them;
+- paragraphs are justified;
+- markdown `---` horizontal rules are hidden (the h2 border already separates articles, and a stray trailing rule otherwise strands a near-blank page);
+- a `## Signature` heading starts on its own final page, so the execution block prints cleanly;
+- the title-page h1 is enlarged (30pt);
+- a plain `**bold subtitle**` line immediately after the H1 is stripped along with it (the stock stripper only removes `**meta** | …` lines containing a pipe).
+
+Default `false` keeps the manual-style layout exactly as before. Puppeteer pipeline only — the LaTeX pipeline ignores `legal` and `fonts.heading`.
 
 ### Confidential / internal markings
 
